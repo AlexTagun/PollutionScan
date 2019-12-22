@@ -58,11 +58,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        LatLng marker = new LatLng(55.80860455111258,38.90439907852537);
-        mMap.addMarker(new MarkerOptions()
-                .position(marker)
-                .title("Ты пидор"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker, 12));
+//        LatLng marker = new LatLng(55.80860455111258,38.90439907852537);
+//        mMap.addMarker(new MarkerOptions()
+//                .position(marker)
+//                .title("Ты пидор"));
+//        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker, 12));
 
 
 
@@ -76,8 +76,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         for(int i = 0; i < data.length(); i++){
             try {
                 JSONObject point = data.getJSONObject(i);
-//                String coordinates = point.getString("g");
-//                Log.i("PAGE", coordinates);
                 parseData(point);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -85,7 +83,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         for (Point point: _points) point.drawMarker();
-
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(_points.get(0).getPosition(), 9));
     }
 
     private void showLongLog(String log){
@@ -132,16 +130,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private class Point{
-        private float x;
-        private float y;
+        private double x;
+        private double y;
         private String value;
 
-        Point(float x, float y, String value){
+        Point(double x, double y, String value){
             this.x = x;
             this.y = y;
             this.value = value;
 
             _points.add(this);
+        }
+
+        public LatLng getPosition(){
+            return new LatLng(x,y);
         }
 
         public void drawMarker(){
@@ -162,11 +164,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             String xs = coordinates.substring(1, 9);
             String ys = coordinates.substring(11, 19);
-            float x = Float.parseFloat(xs);
-            float y = Float.parseFloat(ys);
+            double x = Double.parseDouble(xs);
+            double y = Double.parseDouble(ys);
+
+
 //            Log.i("PAGE", Float.toString(x));
 //            Log.i("PAGE", Float.toString(y));
-//            int value = (!valueS.equals("-")) ? Integer.parseInt(valueS) : 0;
+
             new Point(x, y, valueS);
 
         } catch (JSONException e) {

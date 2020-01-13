@@ -31,6 +31,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+
+import com.google.android.gms.location.LocationResult;
 import com.google.android.material.snackbar.Snackbar;
 import android.Manifest;
 import android.widget.Button;

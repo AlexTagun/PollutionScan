@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Location;
 import android.preference.PreferenceManager;
@@ -13,8 +14,10 @@ import android.app.NotificationChannel;
 
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.prefs.PreferenceChangeEvent;
 
 /**
  * Class to process location results.
@@ -22,6 +25,10 @@ import java.util.List;
 class LocationResultHelper {
 
     final static String KEY_LOCATION_UPDATES_RESULT = "location-update-result";
+
+    final static String KEY_LOCATION_UPDATES_COUNT = "location-update-count";
+
+    final static int MAX_LOCATION_COUNT = 1000;
 
     final private static String PRIMARY_CHANNEL = "default";
 
@@ -69,23 +76,108 @@ class LocationResultHelper {
         return sb.toString();
     }
 
+    static int getLocationCount(Context context){
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        boolean isContainsLocationCount = PreferenceManager.getDefaultSharedPreferences(context).contains(KEY_LOCATION_UPDATES_COUNT);
+
+        if(!isContainsLocationCount){
+            editor.putString(KEY_LOCATION_UPDATES_COUNT, Integer.toString(0));
+            editor.apply();
+        }
+
+        int locationCount = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context).getString(KEY_LOCATION_UPDATES_COUNT,"0"));
+
+        return locationCount;
+    }
+
     /**
      * Saves location result as a string to {@link android.content.SharedPreferences}.
      */
     void saveResults() {
-        PreferenceManager.getDefaultSharedPreferences(mContext)
-                .edit()
-                .putString(KEY_LOCATION_UPDATES_RESULT, getLocationResultTitle() + "\n" +
-                        getLocationResultText())
-                .apply();
+//        PreferenceManager.getDefaultSharedPreferences(mContext)
+//                .edit()
+//                .putString(KEY_LOCATION_UPDATES_RESULT, getLocationResultTitle() + "\n" +
+//                        getLocationResultText())
+//                .apply();
+
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
+        List<String> locationStrings = getLocationStringsForSaving();
+
+        int locationCount = getLocationCount(mContext);
+
+        for(int i = 0; i < locationStrings.size(); i++){
+            if(locationCount < MAX_LOCATION_COUNT){
+                editor.putString(KEY_LOCATION_UPDATES_RESULT + locationCount, locationStrings.get(i));
+
+                locationCount++;
+            }
+        }
+
+        editor.putString(KEY_LOCATION_UPDATES_COUNT, Integer.toString(locationCount));
+
+        editor.apply();
+    }
+
+    List<String> getLocationStringsForSaving(){
+        List<String> LocationStrings = new ArrayList<>();
+
+
+        if (mLocations.isEmpty()) {
+            return LocationStrings;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (Location location : mLocations) {
+            sb.append(new Date(location.getTime()));
+            sb.append("\n");
+            sb.append("(");
+            sb.append(location.getLatitude());
+            sb.append(", ");
+            sb.append(location.getLongitude());
+            sb.append(")");
+
+            LocationStrings.add(sb.toString());
+
+            sb.setLength(0);
+        }
+
+        return LocationStrings;
     }
 
     /**
      * Fetches location results from {@link android.content.SharedPreferences}.
      */
     static String getSavedLocationResult(Context context) {
-        return PreferenceManager.getDefaultSharedPreferences(context)
-                .getString(KEY_LOCATION_UPDATES_RESULT, "");
+//        return PreferenceManager.getDefaultSharedPreferences(context)
+//                .getString(KEY_LOCATION_UPDATES_RESULT, "");
+
+
+
+        int locationCount = getLocationCount(context);
+
+        StringBuilder sb = new StringBuilder();
+
+        for(int i = 0; i < locationCount; i++){
+            String currentLocation = PreferenceManager.getDefaultSharedPreferences(context).getString(KEY_LOCATION_UPDATES_RESULT + i, "");
+            sb.append(currentLocation);
+            sb.append("\n");
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
+
+    static void clearLocationSaves(Context context){
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+
+        int locationCount = getLocationCount(context);
+
+        for(int i = 0; i < locationCount; i++){
+            editor.remove(KEY_LOCATION_UPDATES_RESULT + i);
+        }
+
+        editor.putString(KEY_LOCATION_UPDATES_COUNT, Integer.toString(0));
+
+        editor.apply();
     }
 
     /**

@@ -137,13 +137,11 @@ class LocationResultHelper {
 
         StringBuilder sb = new StringBuilder();
         for (Location location : mLocations) {
-            sb.append(new Date(location.getTime()));
-            sb.append("\n");
-            sb.append("(");
+            sb.append(location.getTime());
+            sb.append(",");
             sb.append(location.getLatitude());
-            sb.append(", ");
+            sb.append(",");
             sb.append(location.getLongitude());
-            sb.append(")");
 
             LocationStrings.add(sb.toString());
 

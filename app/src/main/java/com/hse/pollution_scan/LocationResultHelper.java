@@ -1,6 +1,7 @@
 package com.hse.pollution_scan;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -9,15 +10,15 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Location;
 import android.preference.PreferenceManager;
-import androidx.core.app.TaskStackBuilder;
-import android.app.NotificationChannel;
 
+import com.hse.pollution_scan.gps.LocationInfo;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.prefs.PreferenceChangeEvent;
+
+import androidx.core.app.TaskStackBuilder;
 
 /**
  * Class to process location results.
@@ -151,12 +152,24 @@ class LocationResultHelper {
         return LocationStrings;
     }
 
+    static List<LocationInfo> getLocationInfos(Context context){
+        List<LocationInfo> locationInfos = new ArrayList<>();
+
+        int locationCount = getLocationCount(context);
+
+        for(int i = 0; i < locationCount; i++){
+            String locationString = PreferenceManager.getDefaultSharedPreferences(context).getString(KEY_LOCATION_UPDATES_RESULT + i, "");
+            LocationInfo locationInfo = LocationInfo.getLocationInfoFromString(locationString);
+            locationInfos.add(locationInfo);
+        }
+
+        return locationInfos;
+    }
+
     /**
      * Fetches location results from {@link android.content.SharedPreferences}.
      */
     static String getSavedLocationResult(Context context) {
-//        return PreferenceManager.getDefaultSharedPreferences(context)
-//                .getString(KEY_LOCATION_UPDATES_RESULT, "");
 
 
 

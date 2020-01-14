@@ -15,7 +15,11 @@ class LocationRequestHelper {
                 .apply();
     }
 
-    static boolean getRequesting(Context context) {
+    static boolean getRequesting(Context context, boolean isGPS) {
+        if(!isGPS){
+            setRequesting(context, false);
+        }
+
         return PreferenceManager.getDefaultSharedPreferences(context)
                 .getBoolean(KEY_LOCATION_UPDATES_REQUESTED, false);
     }

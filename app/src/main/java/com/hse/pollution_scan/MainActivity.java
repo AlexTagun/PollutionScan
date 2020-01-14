@@ -16,32 +16,32 @@ package com.hse.pollution_scan;
  * limitations under the License.
  */
 
+import android.Manifest;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentActivity;
-import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-
-import com.google.android.gms.location.LocationResult;
-import com.google.android.material.snackbar.Snackbar;
-import android.Manifest;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.material.snackbar.Snackbar;
+import com.hse.pollution_scan.gps.GpsController;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentActivity;
 
 
 /**
@@ -94,6 +94,8 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
     private Button mClearLocationsButton;
     private TextView mLocationUpdatesResultView;
 
+    private GpsController _gpsController;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,6 +112,9 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
         }
 
         buildGoogleApiClient();
+
+        initGPS();
+        _gpsController.turnGPSOn();
     }
 
     @Override
@@ -123,7 +128,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
     @Override
     protected void onResume() {
         super.onResume();
-        updateButtonsState(LocationRequestHelper.getRequesting(this));
+        updateButtonsState(LocationRequestHelper.getRequesting(this, _gpsController.isGPS()));
         mLocationUpdatesResultView.setText(LocationResultHelper.getSavedLocationResult(this));
     }
 
@@ -310,7 +315,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
         if (s.equals(LocationResultHelper.KEY_LOCATION_UPDATES_RESULT)) {
             mLocationUpdatesResultView.setText(LocationResultHelper.getSavedLocationResult(this));
         } else if (s.equals(LocationRequestHelper.KEY_LOCATION_UPDATES_REQUESTED)) {
-            updateButtonsState(LocationRequestHelper.getRequesting(this));
+            updateButtonsState(LocationRequestHelper.getRequesting(this, _gpsController.isGPS()));
         }
     }
 
@@ -318,6 +323,13 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
      * Handles the Request Updates button and requests start of location updates.
      */
     public void requestLocationUpdates(View view) {
+        if (!_gpsController.isGPS()) {
+            _gpsController.turnGPSOn();
+            Toast.makeText(this, "Please turn on GPS", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
         try {
             Log.i(TAG, "Starting location updates");
             LocationRequestHelper.setRequesting(this, true);
@@ -356,6 +368,12 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
         } else {
             mRequestUpdatesButton.setEnabled(true);
             mRemoveUpdatesButton.setEnabled(false);
+        }
+    }
+
+    private void initGPS(){
+        if(_gpsController == null){
+            _gpsController = new GpsController(this);
         }
     }
 }

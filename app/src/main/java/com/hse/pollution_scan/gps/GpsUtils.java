@@ -1,11 +1,10 @@
-package com.hse.pollution_scan;
+package com.hse.pollution_scan.gps;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.IntentSender;
 import android.location.LocationManager;
-import androidx.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -19,6 +18,9 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.hse.pollution_scan.AppConstants;
+
+import androidx.annotation.NonNull;
 
 import static android.content.ContentValues.TAG;
 
@@ -27,7 +29,7 @@ public class GpsUtils {
     private Context context;
     private SettingsClient mSettingsClient;
     private LocationSettingsRequest mLocationSettingsRequest;
-    private LocationManager locationManager;
+    public LocationManager locationManager;
     private LocationRequest locationRequest;
 
     public GpsUtils(Context context) {
@@ -96,6 +98,8 @@ public class GpsUtils {
                     });
         }
     }
+
+
 
     public interface onGpsListener {
         void gpsStatus(boolean isGPSEnable);

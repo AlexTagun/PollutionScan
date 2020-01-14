@@ -43,6 +43,8 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 
 /**
  * The only activity in this sample. Displays UI widgets for requesting and removing location
@@ -354,6 +356,11 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
     public void clearLocations(View view){
         LocationResultHelper.clearLocationSaves(this);
         mLocationUpdatesResultView.setText(LocationResultHelper.getSavedLocationResult(this));
+    }
+
+    public void toMap(View view){
+        Intent mIntent = new Intent(MainActivity.this, MapsActivity.class);
+        startActivity(mIntent);
     }
 
     /**

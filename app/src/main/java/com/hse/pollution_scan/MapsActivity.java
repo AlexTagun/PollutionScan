@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
+import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -163,6 +164,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if(value.equals("-")) return -1;
             return Integer.parseInt(value);
         }
+    }
+
+    public void toMain(View view){
+        finish();
     }
 
     private void parseData(JSONObject point){

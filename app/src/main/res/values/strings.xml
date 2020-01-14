@@ -21,5 +21,7 @@
         <item quantity="other">%d locations reported</item>
     </plurals>
 
+    <string name="max_locations_reported">Max locations reported</string>
+
     <string name="default_channel">Default channel</string>
 </resources>

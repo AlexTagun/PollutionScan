@@ -52,8 +52,17 @@ class LocationResultHelper {
      * Returns the title for reporting about a list of {@link Location} objects.
      */
     private String getLocationResultTitle() {
-        String numLocationsReported = mContext.getResources().getQuantityString(
-                R.plurals.num_locations_reported, mLocations.size(), mLocations.size());
+        int locationCount = getLocationCount(mContext);
+
+        String numLocationsReported;
+
+        if(locationCount < MAX_LOCATION_COUNT){
+            numLocationsReported = mContext.getResources().getQuantityString(
+                    R.plurals.num_locations_reported, locationCount, locationCount);
+        }else{
+            numLocationsReported = mContext.getResources().getString(R.string.max_locations_reported);
+        }
+
         return numLocationsReported + ": " + DateFormat.getDateTimeInstance().format(new Date());
     }
 

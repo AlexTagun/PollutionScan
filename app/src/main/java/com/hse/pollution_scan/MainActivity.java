@@ -91,6 +91,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
     // UI Widgets.
     private Button mRequestUpdatesButton;
     private Button mRemoveUpdatesButton;
+    private Button mClearLocationsButton;
     private TextView mLocationUpdatesResultView;
 
     @Override
@@ -100,6 +101,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
 
         mRequestUpdatesButton = (Button) findViewById(R.id.request_updates_button);
         mRemoveUpdatesButton = (Button) findViewById(R.id.remove_updates_button);
+        mClearLocationsButton = (Button) findViewById(R.id.clear_locations_button);
         mLocationUpdatesResultView = (TextView) findViewById(R.id.location_updates_result);
 
         // Check if the user revoked runtime permissions.
@@ -335,6 +337,11 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
         LocationRequestHelper.setRequesting(this, false);
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient,
                 getPendingIntent());
+    }
+
+    public void clearLocations(View view){
+        LocationResultHelper.clearLocationSaves(this);
+        mLocationUpdatesResultView.setText(LocationResultHelper.getSavedLocationResult(this));
     }
 
     /**

@@ -48,6 +48,14 @@
         android:onClick="removeLocationUpdates"
         android:text="@string/remove_updates" />
 
+    <Button
+        android:id="@+id/clear_locations_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:onClick="clearLocations"
+        android:text="@string/clear_locations" />
+
     <TextView
         android:id="@+id/location_updates_result"
         android:layout_width="wrap_content"

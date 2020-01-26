@@ -38,12 +38,13 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.material.snackbar.Snackbar;
 import com.hse.pollution_scan.gps.GpsController;
 
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
-
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 
 /**
@@ -93,7 +94,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
     // UI Widgets.
     private Button mRequestUpdatesButton;
     private Button mRemoveUpdatesButton;
-    private Button mClearLocationsButton;
+    private Button mCalculateResultButton;
     private TextView mLocationUpdatesResultView;
 
     private GpsController _gpsController;
@@ -105,7 +106,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
 
         mRequestUpdatesButton = (Button) findViewById(R.id.request_updates_button);
         mRemoveUpdatesButton = (Button) findViewById(R.id.remove_updates_button);
-        mClearLocationsButton = (Button) findViewById(R.id.clear_locations_button);
+        mCalculateResultButton = (Button) findViewById(R.id.calculate_result_button);
         mLocationUpdatesResultView = (TextView) findViewById(R.id.location_updates_result);
 
         // Check if the user revoked runtime permissions.
@@ -353,9 +354,56 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
                 getPendingIntent());
     }
 
-    public void clearLocations(View view){
+    public void calculateResult(View view){
+        //TODO: wait until download and parse points
+        if(MapsActivity._points.size() <= 0){
+            Toast.makeText(this, "Getting points on Map", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        PollutionInfo pollutionInfo = PollutionAnalyzer.calculate(LocationResultHelper.getLocationInfos(this));
+
+        //TODO: show result
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Date: ");
+        sb.append("\n");
+
+        Date duration = new Date(pollutionInfo.time);
+
+        float hours = TimeUnit.MILLISECONDS.toHours(duration.getTime());
+        if(0 < hours){
+            sb.append("hours = ");
+            sb.append(hours);
+            sb.append("\n");
+        }
+
+        float minutes = TimeUnit.MILLISECONDS.toMinutes(duration.getTime());
+        if(0 < minutes){
+            sb.append("minutes = ");
+            sb.append(minutes % 60);
+            sb.append("\n");
+        }
+
+        float seconds = TimeUnit.MILLISECONDS.toSeconds(duration.getTime());
+        if(0 < seconds){
+            sb.append("seconds = ");
+            sb.append(seconds % 60);
+            sb.append("\n");
+        }
+
+        sb.append("Your pollution = ");
+        sb.append(pollutionInfo.pollution);
+
+        mLocationUpdatesResultView.setText(sb.toString());
+
+        removeLocationUpdates(view);
+        updateButtonsState(false);
+
+        clearLocations();
+    }
+
+    public void clearLocations(){
         LocationResultHelper.clearLocationSaves(this);
-        mLocationUpdatesResultView.setText(LocationResultHelper.getSavedLocationResult(this));
     }
 
     public void toMap(View view){

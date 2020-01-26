@@ -11,6 +11,7 @@
     <string name="request_updates">Request updates</string>
     <string name="remove_updates">Remove updates</string>
     <string name="clear_locations">Clear</string>
+    <string name="calculate_result">Calculate</string>>
     <string name="to_map">Map</string>
     <string name="to_main">Main</string>
     <string name="unknown_location">Unknown location</string>

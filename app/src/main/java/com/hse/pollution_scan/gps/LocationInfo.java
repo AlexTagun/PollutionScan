@@ -31,6 +31,10 @@ public class LocationInfo {
         return time.toString();
     }
 
+    public Date getFormatTime(){
+        return new Date(_time);
+    }
+
     public static LocationInfo getLocationInfoFromString(String stringForParsing){
         String[] parts = stringForParsing.split(",");
 

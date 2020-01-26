@@ -18,6 +18,7 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.hse.pollution_scan.gps.LocationInfo;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,7 +36,7 @@ import java.util.Objects;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private List<Point> _points = new ArrayList<>();
+    public static List<Point> _points = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +87,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         for (Point point: _points) point.drawMarker();
+
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(_points.get(0).getPosition(), 9));
     }
 
@@ -96,6 +98,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             int end = (i+1) * maxLogSize;
             end = end > log.length() ? log.length() : end;
             Log.v("PAGE", log.substring(start, end));
+        }
+    }
+
+    private void drawPlayerPosition(){
+        List<LocationInfo> locationInfos = LocationResultHelper.getLocationInfos(this);
+
+        for(LocationInfo location : locationInfos){
+            Point point = new Point(location.getLatitude(),location.getLongitude(), "100");
+            point.drawMarker();
         }
     }
 
@@ -132,10 +143,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return null;
     }
 
-    private class Point{
+    public class Point{
         private double x;
         private double y;
-        private String value;
+        public String value;
 
         Point(double x, double y, String value){
             this.x = x;
@@ -163,6 +174,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         private int tryParseValue(){
             if(value.equals("-")) return -1;
             return Integer.parseInt(value);
+        }
+
+        public double calculateDistanceFromPoint(double otherX, double otherY){
+            return calculateDistanceBetweenPoints(x, y, otherX, otherY);
+        }
+
+        private double calculateDistanceBetweenPoints(
+                double x1,
+                double y1,
+                double x2,
+                double y2) {
+            return Math.sqrt( Math.abs(y2 - y1) * Math.abs(y2 - y1) + Math.abs(x2 - x1) * (Math.abs(x2 - x1)));
         }
     }
 

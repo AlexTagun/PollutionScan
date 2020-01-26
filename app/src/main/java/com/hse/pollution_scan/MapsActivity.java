@@ -99,11 +99,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+
     private JSONArray getDataFromURL() {
         try {
             URL url = null;
-            url = new URL("http://aqicn.org/map/moscow/ru/#");
+            url = new URL("https://aqicn.org/map/moscow/ru/#");
             URLConnection conn = url.openConnection();
             BufferedReader reader = new BufferedReader(
                     new InputStreamReader(conn.getInputStream()));

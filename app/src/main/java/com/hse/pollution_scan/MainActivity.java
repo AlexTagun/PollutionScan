@@ -37,6 +37,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.material.snackbar.Snackbar;
 import com.hse.pollution_scan.gps.GpsController;
+import com.yandex.metrica.YandexMetrica;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -404,6 +405,9 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
 
         sb.append("Your pollution = ");
         sb.append(pollutionInfo.pollution);
+
+        String eventParameters = String.format("{\"value\":\"%s\"}", pollutionInfo.pollution);
+        YandexMetrica.reportEvent("Pollution Info", eventParameters);
 
         mLocationUpdatesResultView.setText(sb.toString());
 

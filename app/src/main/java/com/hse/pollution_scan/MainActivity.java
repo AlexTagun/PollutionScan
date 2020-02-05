@@ -132,7 +132,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
     protected void onResume() {
         super.onResume();
         updateButtonsState(LocationRequestHelper.getRequesting(this, _gpsController.isGPS()));
-        mLocationUpdatesResultView.setText(LocationResultHelper.getSavedLocationResult(this));
+        //mLocationUpdatesResultView.setText(LocationResultHelper.getSavedLocationResult(this));
     }
 
     @Override
@@ -316,7 +316,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
         if (s.equals(LocationResultHelper.KEY_LOCATION_UPDATES_RESULT)) {
-            mLocationUpdatesResultView.setText(LocationResultHelper.getSavedLocationResult(this));
+            //mLocationUpdatesResultView.setText(LocationResultHelper.getSavedLocationResult(this));
         } else if (s.equals(LocationRequestHelper.KEY_LOCATION_UPDATES_REQUESTED)) {
             updateButtonsState(LocationRequestHelper.getRequesting(this, _gpsController.isGPS()));
         }
@@ -407,8 +407,8 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
 
         mLocationUpdatesResultView.setText(sb.toString());
 
-        removeLocationUpdates(view);
-        updateButtonsState(false);
+        //removeLocationUpdates(view);
+        //updateButtonsState(false);
 
         clearLocations();
     }

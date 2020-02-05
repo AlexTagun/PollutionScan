@@ -360,6 +360,12 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
             Toast.makeText(this, "Getting points on Map", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        if(LocationResultHelper.getLocationCount(this) <= 0){
+            Toast.makeText(this, "There are not user locations", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         PollutionInfo pollutionInfo = PollutionAnalyzer.calculate(LocationResultHelper.getLocationInfos(this));
 
         //TODO: show result

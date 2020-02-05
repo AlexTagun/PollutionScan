@@ -371,6 +371,11 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
         //TODO: show result
         StringBuilder sb = new StringBuilder();
 
+        sb.append("Correct points: ");
+        sb.append(PollutionAnalyzer.CorrectPointsCount);
+        sb.append("\n");
+        sb.append("\n");
+
         sb.append("Date: ");
         sb.append("\n");
 

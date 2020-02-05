@@ -19,8 +19,11 @@ class PollutionInfo{
 public class PollutionAnalyzer {
     private static final int  MIN_TIME_BETWEEN_LOCATIONS_IN_SECONDS= 60;
 
+    public static int CorrectPointsCount = -1;
+
     public static PollutionInfo calculate(List<LocationInfo> locationInfos){
         locationInfos = removeDuplicate(locationInfos);
+        CorrectPointsCount = locationInfos.size();
 
         PollutionInfo pollutionInfo = calculateAverage(locationInfos);
 

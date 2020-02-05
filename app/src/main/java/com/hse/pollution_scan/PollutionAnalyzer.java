@@ -69,7 +69,7 @@ public class PollutionAnalyzer {
             return new PollutionInfo(pollutionInfos.get(0).pollution, duration);
         }
 
-        float pollutionValue = 0;
+        double pollutionValue = 0;
 
         for(int i = 1; i < pollutionInfos.size(); i++){
             int prevIndex = i - 1;
@@ -79,7 +79,8 @@ public class PollutionAnalyzer {
             PollutionInfo currentPollutionInfo = pollutionInfos.get(i);
             long currentTime = currentPollutionInfo.time;
 
-            long proportia = (currentTime - prevTime)/ duration;
+            double timeDiff = (double) (currentTime - prevTime);
+            double proportia = timeDiff / ((double)duration);
             pollutionValue += proportia * currentPollutionInfo.pollution;
         }
 
@@ -98,7 +99,7 @@ public class PollutionAnalyzer {
 
     private static PollutionInfo getPollutionByLocation(LocationInfo locationInfo){
         double maxDistance = Double.MAX_VALUE;
-        double pollutionValue = 0;
+        double pollutionValue = -1;
 
         List<MapsActivity.Point> points = MapsActivity._points;
 

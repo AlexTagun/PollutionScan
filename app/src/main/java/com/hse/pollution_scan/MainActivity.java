@@ -369,6 +369,8 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
 
         PollutionInfo pollutionInfo = PollutionAnalyzer.calculate(LocationResultHelper.getLocationInfos(this));
 
+        String durationString = "";
+
         //TODO: show result
         StringBuilder sb = new StringBuilder();
 
@@ -387,26 +389,42 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
             sb.append("hours = ");
             sb.append(hours);
             sb.append("\n");
+
+            durationString = durationString + hours;
+        }else{
+            durationString = durationString + "0";
         }
+
+        durationString = durationString + ":";
 
         float minutes = TimeUnit.MILLISECONDS.toMinutes(duration.getTime());
         if(0 < minutes){
             sb.append("minutes = ");
             sb.append(minutes % 60);
             sb.append("\n");
+
+            durationString = durationString + minutes;
+        }else{
+            durationString = durationString + "0";
         }
+
+        durationString = durationString + ":";
 
         float seconds = TimeUnit.MILLISECONDS.toSeconds(duration.getTime());
         if(0 < seconds){
             sb.append("seconds = ");
             sb.append(seconds % 60);
             sb.append("\n");
+
+            durationString = durationString + seconds;
+        }else{
+            durationString = durationString + "0";
         }
 
         sb.append("Your pollution = ");
         sb.append(pollutionInfo.pollution);
 
-        String eventParameters = String.format("{\"value\":\"%s\"}", pollutionInfo.pollution);
+        String eventParameters = String.format("{\"value\":\"%s\", \"duration\":\"%s\"}", pollutionInfo.pollution, durationString);
         YandexMetrica.reportEvent("Pollution Info", eventParameters);
 
         mLocationUpdatesResultView.setText(sb.toString());

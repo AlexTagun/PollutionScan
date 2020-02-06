@@ -399,11 +399,13 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
 
         float minutes = TimeUnit.MILLISECONDS.toMinutes(duration.getTime());
         if(0 < minutes){
+            int formatMinutes = (int)(minutes % 60);
+
             sb.append("minutes = ");
-            sb.append(minutes % 60);
+            sb.append(formatMinutes);
             sb.append("\n");
 
-            durationString = durationString + minutes;
+            durationString = durationString + formatMinutes;
         }else{
             durationString = durationString + "0";
         }
@@ -412,19 +414,21 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
 
         float seconds = TimeUnit.MILLISECONDS.toSeconds(duration.getTime());
         if(0 < seconds){
+            int formatSeconds = (int)(seconds % 60);
+
             sb.append("seconds = ");
-            sb.append(seconds % 60);
+            sb.append(formatSeconds);
             sb.append("\n");
 
-            durationString = durationString + seconds;
+            durationString = durationString + formatSeconds;
         }else{
             durationString = durationString + "0";
         }
 
         sb.append("Your pollution = ");
-        sb.append(pollutionInfo.pollution);
+        sb.append(String.format("%.1f",pollutionInfo.pollution));
 
-        String eventParameters = String.format("{\"value\":\"%s\", \"duration\":\"%s\"}", pollutionInfo.pollution, durationString);
+        String eventParameters = String.format("{\"value\":\"%.1f\", \"duration\":\"%s\"}", pollutionInfo.pollution, durationString);
         YandexMetrica.reportEvent("Pollution Info", eventParameters);
 
         mLocationUpdatesResultView.setText(sb.toString());

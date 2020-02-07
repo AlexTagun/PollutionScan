@@ -3,8 +3,8 @@ package com.hse.pollution_scan.maps;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.hse.pollution_scan.MainActivity;
 
-import static com.hse.pollution_scan.MapsActivity.mMap;
 
 public class MapsPoint {
     private double x;
@@ -29,7 +29,7 @@ public class MapsPoint {
         if(tryParseValue() >= 50) descriptor = BitmapDescriptorFactory.HUE_ORANGE;
         else descriptor = BitmapDescriptorFactory.HUE_GREEN;
 
-        mMap.addMarker(new MarkerOptions()
+        MainActivity.mMap.addMarker(new MarkerOptions()
                 .position(marker).icon(BitmapDescriptorFactory.defaultMarker(descriptor))
                 .title(value));
     }

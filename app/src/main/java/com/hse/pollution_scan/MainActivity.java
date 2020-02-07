@@ -23,7 +23,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
@@ -36,11 +38,20 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.material.snackbar.Snackbar;
 import com.hse.pollution_scan.gps.GpsController;
-import com.hse.pollution_scan.gps.LocationInfo;
+import com.hse.pollution_scan.maps.JsonPointParser;
+import com.hse.pollution_scan.maps.MapsPoint;
 import com.hse.pollution_scan.maps.MapsPoints;
 import com.yandex.metrica.YandexMetrica;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Date;
 import java.util.List;
@@ -48,6 +59,7 @@ import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
@@ -63,7 +75,8 @@ import androidx.fragment.app.FragmentActivity;
  */
 public class MainActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        SharedPreferences.OnSharedPreferenceChangeListener {
+        SharedPreferences.OnSharedPreferenceChangeListener,
+        OnMapReadyCallback {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
@@ -106,6 +119,8 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
 
     private GpsController _gpsController;
 
+    public static GoogleMap mMap;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,6 +137,10 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
         if (!checkPermissions()) {
             requestPermissions();
         }
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
 
         buildGoogleApiClient();
 
@@ -149,6 +168,31 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
         PreferenceManager.getDefaultSharedPreferences(this)
                 .unregisterOnSharedPreferenceChangeListener(this);
         super.onStop();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        JSONArray data = JsonPointParser.getDataFromURL();
+        if(data == null) return;
+        for(int i = 0; i < data.length(); i++){
+            try {
+                JSONObject point = data.getJSONObject(i);
+                JsonPointParser.parseData(point);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        List<MapsPoint> points = MapsPoints._points;
+        MapsPoints.drawPoints();
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(points.get(0).getPosition(), 9));
     }
 
     /**
@@ -451,11 +495,6 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
         LocationResultHelper.clearLocationSaves(this);
     }
 
-    public void toMap(View view){
-        Intent mIntent = new Intent(MainActivity.this, MapsActivity.class);
-        startActivity(mIntent);
-    }
-
     /**
      * Ensures that only one button is enabled at any time. The Start Updates button is enabled
      * if the user is not requesting location updates. The Stop Updates button is enabled if the
@@ -479,5 +518,15 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
 
     public static Context GetContext(){
         return mContext;
+    }
+
+    private void showLongLog(String log){
+        int maxLogSize = 1000;
+        for(int i = 0; i <= log.length() / maxLogSize; i++) {
+            int start = i * maxLogSize;
+            int end = (i+1) * maxLogSize;
+            end = end > log.length() ? log.length() : end;
+            Log.v("PAGE", log.substring(start, end));
+        }
     }
 }

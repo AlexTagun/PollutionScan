@@ -1,6 +1,8 @@
 package com.hse.pollution_scan;
 
 import com.hse.pollution_scan.gps.LocationInfo;
+import com.hse.pollution_scan.maps.MapsPoint;
+import com.hse.pollution_scan.maps.MapsPoints;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,10 +106,10 @@ public class PollutionAnalyzer {
         double maxDistance = Double.MAX_VALUE;
         double pollutionValue = -1;
 
-        List<MapsActivity.Point> points = MapsActivity._points;
+        List<MapsPoint> points = MapsPoints._points;
 
         for (int i = 0; i < points.size(); i++){
-            MapsActivity.Point currentPoint = points.get(i);
+            MapsPoint currentPoint = points.get(i);
 
             if(tryParseInt(currentPoint.value)){
                 double currentDistance = currentPoint.calculateDistanceFromPoint(locationInfo.getLatitude(), locationInfo.getLongitude());

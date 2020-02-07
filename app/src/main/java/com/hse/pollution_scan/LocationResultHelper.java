@@ -23,7 +23,7 @@ import androidx.core.app.TaskStackBuilder;
 /**
  * Class to process location results.
  */
-class LocationResultHelper {
+public class LocationResultHelper {
 
     final static String KEY_LOCATION_UPDATES_RESULT = "location-update-result";
 
@@ -152,7 +152,7 @@ class LocationResultHelper {
         return LocationStrings;
     }
 
-    static List<LocationInfo> getLocationInfos(Context context){
+    public static List<LocationInfo> getLocationInfos(Context context){
         List<LocationInfo> locationInfos = new ArrayList<>();
 
         int locationCount = getLocationCount(context);

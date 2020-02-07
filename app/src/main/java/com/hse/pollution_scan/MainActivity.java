@@ -18,6 +18,7 @@ package com.hse.pollution_scan;
 
 import android.Manifest;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -37,9 +38,12 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.material.snackbar.Snackbar;
 import com.hse.pollution_scan.gps.GpsController;
+import com.hse.pollution_scan.gps.LocationInfo;
+import com.hse.pollution_scan.maps.MapsPoints;
 import com.yandex.metrica.YandexMetrica;
 
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
@@ -92,6 +96,8 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
      */
     private GoogleApiClient mGoogleApiClient;
 
+    private static Context mContext;
+
     // UI Widgets.
     private Button mRequestUpdatesButton;
     private Button mRemoveUpdatesButton;
@@ -104,6 +110,8 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mContext = this;
 
         mRequestUpdatesButton = (Button) findViewById(R.id.request_updates_button);
         mRemoveUpdatesButton = (Button) findViewById(R.id.remove_updates_button);
@@ -357,7 +365,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
 
     public void calculateResult(View view){
         //TODO: wait until download and parse points
-        if(MapsActivity._points.size() <= 0){
+        if(MapsPoints._points.size() <= 0){
             Toast.makeText(this, "Getting points on Map", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -467,5 +475,9 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
         if(_gpsController == null){
             _gpsController = new GpsController(this);
         }
+    }
+
+    public static Context GetContext(){
+        return mContext;
     }
 }

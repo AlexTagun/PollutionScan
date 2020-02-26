@@ -107,7 +107,7 @@ public class JsonPointParser {
 //            Log.i("PAGE", Float.toString(x));
 //            Log.i("PAGE", Float.toString(y));
 
-            new MapsPoint(x, y, valueS);
+            new MapsPoint(x, y, valueS, PointType.Station);
 
         } catch (JSONException e) {
             e.printStackTrace();

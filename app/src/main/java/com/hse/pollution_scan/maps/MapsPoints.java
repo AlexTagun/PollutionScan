@@ -12,21 +12,24 @@ import java.util.List;
 public class MapsPoints{
     public static List<MapsPoint> _points = new ArrayList<>();
 
-    private void drawPlayerPosition(){
+    private static void drawPlayerPosition(){
         Context mContext = MainActivity.GetContext();
         List<LocationInfo> locationInfos = LocationResultHelper.getLocationInfos(mContext);
 
-        for(LocationInfo location : locationInfos){
-            MapsPoint point = new MapsPoint(location.getLatitude(),location.getLongitude(), "100");
+        int lastIndex = locationInfos.size() - 1;
+
+        if(lastIndex > 0){
+            LocationInfo lastLocation = locationInfos.get(lastIndex);
+
+            MapsPoint point = new MapsPoint(lastLocation.getLatitude(),lastLocation.getLongitude(), "100", PointType.Player);
             point.drawMarker();
         }
     }
 
     public static void drawPoints(){
-
+        //drawPlayerPosition();
         for (MapsPoint point: _points) point.drawMarker();
     }
-
 }
 
 

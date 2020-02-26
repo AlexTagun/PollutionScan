@@ -7,13 +7,57 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class JsonPointParser {
+
+    public static void getTestDataFromURL()
+    {
+        try {
+            URL url = null;
+            url = new URL("http://185.17.120.159:8081/");
+            //url = new URL("https://aqicn.org/map/moscow/ru/#");
+            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+            conn.setReadTimeout(10000);
+            conn.setConnectTimeout(15000);
+            conn.setRequestMethod("POST");
+            conn.setDoInput(true);
+            conn.setDoOutput(true);
+            
+            
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(conn.getInputStream()));
+            String line = "";
+            ArrayList<String> myTextView = new ArrayList<String>();
+            while ((line = reader.readLine()) != null) {
+                myTextView.add(line);
+            }
+            Log.i(JsonPointParser.class.getSimpleName(), myTextView.get(0));
+
+            OutputStream os = conn.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(
+                    new OutputStreamWriter(os, "UTF-8"));
+            writer.write("sasat");
+            writer.flush();
+            writer.close();
+            os.close();
+
+            conn.connect();
+        } catch (Exception e) {
+
+            Log.e("ERR", Objects.requireNonNull(e.getMessage()));
+        }
+
+    }
+
     public static JSONArray getDataFromURL() {
         try {
             URL url = null;

@@ -7,6 +7,7 @@ import android.location.Location;
 import android.util.Log;
 
 import com.google.android.gms.location.LocationResult;
+import com.hse.pollution_scan.maps.JsonPointParser;
 
 import java.util.List;
 
@@ -51,6 +52,8 @@ public class LocationUpdatesIntentService extends IntentService {
                     // Show notification with the location data.
                     locationResultHelper.showNotification();
                     Log.i(TAG, LocationResultHelper.getSavedLocationResult(this));
+
+                    JsonPointParser.getTestDataFromURL();
                 }
             }
         }

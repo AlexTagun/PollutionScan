@@ -7,31 +7,35 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
+import java.io.DataOutputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class JsonPointParser {
 
-    public static void getTestDataFromURL()
+    public static int getValueFromServer(String data)
     {
         try {
-            URL url = null;
-            url = new URL("http://185.17.120.159:8081/");
-            //url = new URL("https://aqicn.org/map/moscow/ru/#");
-            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
-            conn.setReadTimeout(10000);
-            conn.setConnectTimeout(15000);
-            conn.setRequestMethod("POST");
-            conn.setDoInput(true);
-            conn.setDoOutput(true);
-            
+            byte[] postData       = data.getBytes( StandardCharsets.UTF_8 );
+            int    postDataLength = postData.length;
+            String request        = "http://185.17.120.159:8081/";
+            URL    url            = new URL( request );
+            HttpURLConnection conn= (HttpURLConnection) url.openConnection();
+            conn.setDoOutput( true );
+            conn.setInstanceFollowRedirects( false );
+            conn.setRequestMethod( "POST" );
+            conn.setRequestProperty( "Content-Type", "application/x-www-form-urlencoded");
+            conn.setRequestProperty( "charset", "utf-8");
+            conn.setRequestProperty( "Content-Length", Integer.toString( postDataLength ));
+            conn.setUseCaches( false );
+            try( DataOutputStream wr = new DataOutputStream( conn.getOutputStream())) {
+                wr.write( postData );
+            }
             
             BufferedReader reader = new BufferedReader(
                     new InputStreamReader(conn.getInputStream()));
@@ -41,25 +45,19 @@ public class JsonPointParser {
                 myTextView.add(line);
             }
             Log.i(JsonPointParser.class.getSimpleName(), myTextView.get(0));
-
-            OutputStream os = conn.getOutputStream();
-            BufferedWriter writer = new BufferedWriter(
-                    new OutputStreamWriter(os, "UTF-8"));
-            writer.write("sasat");
-            writer.flush();
-            writer.close();
-            os.close();
-
             conn.connect();
         } catch (Exception e) {
-
             Log.e("ERR", Objects.requireNonNull(e.getMessage()));
         }
 
+        return 0;
     }
 
     public static JSONArray getDataFromURL() {
         try {
+
+            getValueFromServer("some_data"); //TODO:remove
+
             URL url = null;
             url = new URL("https://aqicn.org/map/moscow/ru/#");
             URLConnection conn = url.openConnection();

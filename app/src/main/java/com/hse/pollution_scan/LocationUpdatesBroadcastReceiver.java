@@ -47,7 +47,7 @@ public class LocationUpdatesBroadcastReceiver extends BroadcastReceiver {
                     locationResultHelper.showNotification();
                     Log.i(TAG, LocationResultHelper.getSavedLocationResult(context));
 
-                    JsonPointParser.getTestDataFromURL();
+                    JsonPointParser.getValueFromServer("request");
                 }
             }
         }

@@ -53,7 +53,7 @@ public class LocationUpdatesIntentService extends IntentService {
                     locationResultHelper.showNotification();
                     Log.i(TAG, LocationResultHelper.getSavedLocationResult(this));
 
-                    JsonPointParser.getTestDataFromURL();
+                    JsonPointParser.getValueFromServer("request_1");
                 }
             }
         }

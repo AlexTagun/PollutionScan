@@ -55,9 +55,6 @@ public class JsonPointParser {
 
     public static JSONArray getDataFromURL() {
         try {
-
-            getValueFromServer("some_data"); //TODO:remove
-
             URL url = null;
             url = new URL("https://aqicn.org/map/moscow/ru/#");
             URLConnection conn = url.openConnection();

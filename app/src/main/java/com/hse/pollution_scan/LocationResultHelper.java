@@ -29,7 +29,7 @@ public class LocationResultHelper {
 
     final static String KEY_LOCATION_UPDATES_COUNT = "location-update-count";
 
-    final static int MAX_LOCATION_COUNT = 1000;
+    final static int MAX_LOCATION_COUNT = 10000;
 
     final private static String PRIMARY_CHANNEL = "default";
 

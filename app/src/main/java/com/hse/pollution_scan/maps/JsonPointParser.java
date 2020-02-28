@@ -52,10 +52,11 @@ public class JsonPointParser {
 
             return valueString;
         } catch (Exception e) {
-            Log.e("ERR", Objects.requireNonNull(e.getMessage()));
-        }
+            Log.i(JsonPointParser.class.getSimpleName(), "EROOR");
+            //Log.e("ERR", Objects.requireNonNull(e.getMessage()));
 
-        return "-";
+            return "-";
+        }
     }
 
     public static JSONArray getDataFromURL() {

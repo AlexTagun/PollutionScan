@@ -18,7 +18,7 @@ import java.util.Objects;
 
 public class JsonPointParser {
 
-    public static int getValueFromServer(String data)
+    public static String getValueFromServer(String data)
     {
         try {
             byte[] postData       = data.getBytes( StandardCharsets.UTF_8 );
@@ -44,13 +44,18 @@ public class JsonPointParser {
             while ((line = reader.readLine()) != null) {
                 myTextView.add(line);
             }
-            Log.i(JsonPointParser.class.getSimpleName(), myTextView.get(0));
+
+            String valueString = myTextView.get(0);
+
+            Log.i(JsonPointParser.class.getSimpleName(), valueString);
             conn.connect();
+
+            return valueString;
         } catch (Exception e) {
             Log.e("ERR", Objects.requireNonNull(e.getMessage()));
         }
 
-        return 0;
+        return "-";
     }
 
     public static JSONArray getDataFromURL() {

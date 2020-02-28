@@ -103,22 +103,28 @@ public class PollutionAnalyzer {
     }
 
     private static PollutionInfo getPollutionByLocation(LocationInfo locationInfo){
-        double maxDistance = Double.MAX_VALUE;
-        double pollutionValue = -1;
+//        double maxDistance = Double.MAX_VALUE;
+//        double pollutionValue = -1;
+//
+//        List<MapsPoint> points = MapsPoints._points;
+//
+//        for (int i = 0; i < points.size(); i++){
+//            MapsPoint currentPoint = points.get(i);
+//
+//            if(tryParseInt(currentPoint.value)){
+//                double currentDistance = currentPoint.calculateDistanceFromPoint(locationInfo.getLatitude(), locationInfo.getLongitude());
+//
+//                if(currentDistance < maxDistance){
+//                    maxDistance = currentDistance;
+//                    pollutionValue = Integer.parseInt(currentPoint.value);
+//                }
+//            }
+//        }
 
-        List<MapsPoint> points = MapsPoints._points;
+        int pollutionValue = 0;
 
-        for (int i = 0; i < points.size(); i++){
-            MapsPoint currentPoint = points.get(i);
-
-            if(tryParseInt(currentPoint.value)){
-                double currentDistance = currentPoint.calculateDistanceFromPoint(locationInfo.getLatitude(), locationInfo.getLongitude());
-
-                if(currentDistance < maxDistance){
-                    maxDistance = currentDistance;
-                    pollutionValue = Integer.parseInt(currentPoint.value);
-                }
-            }
+        if(tryParseInt(locationInfo.getValue())){
+            pollutionValue = Integer.parseInt(locationInfo.getValue());
         }
 
         PollutionInfo pollutionInfo = new PollutionInfo(pollutionValue, locationInfo.getTime());

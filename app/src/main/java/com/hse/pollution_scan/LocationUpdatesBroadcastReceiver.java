@@ -46,8 +46,6 @@ public class LocationUpdatesBroadcastReceiver extends BroadcastReceiver {
                     // Show notification with the location data.
                     locationResultHelper.showNotification();
                     Log.i(TAG, LocationResultHelper.getSavedLocationResult(context));
-
-                    JsonPointParser.getValueFromServer("55.6595018,37.2285271");
                 }
             }
         }

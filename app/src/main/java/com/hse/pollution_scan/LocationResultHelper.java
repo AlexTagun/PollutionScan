@@ -12,6 +12,7 @@ import android.location.Location;
 import android.preference.PreferenceManager;
 
 import com.hse.pollution_scan.gps.LocationInfo;
+import com.hse.pollution_scan.maps.JsonPointParser;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -143,6 +144,12 @@ public class LocationResultHelper {
             sb.append(location.getLatitude());
             sb.append(",");
             sb.append(location.getLongitude());
+
+            String dataForGettingValue = location.getLatitude() + "," + location.getLongitude();
+            String valueString = JsonPointParser.getValueFromServer(dataForGettingValue);
+
+            sb.append(",");
+            sb.append(valueString);
 
             LocationStrings.add(sb.toString());
 

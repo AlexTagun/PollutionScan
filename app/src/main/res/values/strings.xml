@@ -8,10 +8,10 @@
     <string name="settings">Settings</string>
     <string name="ok">OK</string>
 
-    <string name="request_updates">Request updates</string>
-    <string name="remove_updates">Remove updates</string>
-    <string name="clear_locations">Clear</string>
-    <string name="calculate_result">Calculate</string>>
+    <string name="request_updates">Собирать</string>
+    <string name="remove_updates">Стоп</string>
+    <string name="clear_locations">Почистить</string>
+    <string name="calculate_result">Анализ</string>>
     <string name="to_map">Map</string>
     <string name="to_main">Main</string>
     <string name="unknown_location">Unknown location</string>

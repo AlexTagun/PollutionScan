@@ -52,10 +52,6 @@
             </intent-filter>
         </activity>
 
-        <service
-            android:name=".LocationUpdatesIntentService"
-            android:exported="false" />
-
         <receiver android:name=".LocationUpdatesBroadcastReceiver"
             android:exported="true">
             <intent-filter>

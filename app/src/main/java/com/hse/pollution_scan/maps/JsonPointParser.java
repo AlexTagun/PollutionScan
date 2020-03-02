@@ -55,7 +55,7 @@ public class JsonPointParser {
 
             return valueString;
         } catch (Exception e) {
-            Log.i(JsonPointParser.class.getSimpleName(), "EROOR");
+            Log.i(JsonPointParser.class.getSimpleName(), "ERROR");
             //Log.e("ERR", Objects.requireNonNull(e.getMessage()));
 
             return "-";

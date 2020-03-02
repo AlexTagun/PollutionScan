@@ -145,12 +145,6 @@ public class LocationResultHelper {
             sb.append(",");
             sb.append(location.getLongitude());
 
-            String dataForGettingValue = location.getLatitude() + "," + location.getLongitude();
-            String valueString = JsonPointParser.getValueFromServer(dataForGettingValue);
-
-            sb.append(",");
-            sb.append(valueString);
-
             LocationStrings.add(sb.toString());
 
             sb.setLength(0);

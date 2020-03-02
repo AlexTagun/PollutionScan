@@ -2,6 +2,8 @@ package com.hse.pollution_scan.maps;
 
 import android.util.Log;
 
+import com.hse.pollution_scan.gps.LocationInfo;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,6 +16,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class JsonPointParser {
@@ -89,6 +92,33 @@ public class JsonPointParser {
             Log.e("ERR", Objects.requireNonNull(e.getMessage()));
         }
         return null;
+    }
+
+    public static String getJsonLocationInfoString(List<LocationInfo> locationInfos){
+        try {
+            JSONArray points = new JSONArray();
+
+            for (LocationInfo locationInfo : locationInfos) {
+                JSONObject point = new JSONObject();
+                point.put("x", locationInfo.getLatitude());
+                point.put("y", locationInfo.getLongitude());
+                point.put("time", locationInfo.getTime());
+
+                points.put(point);
+
+            }
+
+            String jsonString = points.toString();
+
+            Log.i(JsonPointParser.class.getSimpleName(), jsonString);
+
+            return jsonString;
+
+        }
+        catch (JSONException e) {
+                e.printStackTrace();
+                return "";
+        }
     }
 
     public static void parseData(JSONObject point){

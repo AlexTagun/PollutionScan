@@ -403,7 +403,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
     public void requestLocationUpdates(View view) {
         if (!_gpsController.isGPS()) {
             _gpsController.turnGPSOn();
-            Toast.makeText(this, "Please turn on GPS", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Пожалуйста, включите GPS", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -431,12 +431,12 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
 
     public void calculateResult(View view){
         if(MapsPoints._points.size() <= 0){
-            Toast.makeText(this, "Getting points on Map", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Скачивание точек на карту", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if(LocationResultHelper.getLocationCount(this) <= 0){
-            Toast.makeText(this, "There are not user locations", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Нет точек местоположения пользователя", Toast.LENGTH_SHORT).show();
             return;
         }
 

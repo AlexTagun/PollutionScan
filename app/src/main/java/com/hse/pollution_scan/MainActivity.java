@@ -87,6 +87,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
+    private static final String NO_INTERNET_TEXT = "Нет доступа к интернету";
     /**
      * The desired interval for location updates. Inexact. Updates may be more or less frequent.
      */
@@ -429,7 +430,6 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
     }
 
     public void calculateResult(View view){
-        //TODO: wait until download and parse points
         if(MapsPoints._points.size() <= 0){
             Toast.makeText(this, "Getting points on Map", Toast.LENGTH_SHORT).show();
             return;
@@ -442,24 +442,28 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
 
         PollutionInfo pollutionInfo = PollutionAnalyzer.calculate(LocationResultHelper.getLocationInfos(this));
 
+        if(pollutionInfo.pollution <= 0){
+            mLocationUpdatesResultView.setText(NO_INTERNET_TEXT);
+            return;
+        }
+
         String durationString = "";
 
-        //TODO: show result
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Correct points: ");
+        sb.append("Количество корректных позиций: ");
         sb.append(PollutionAnalyzer.CorrectPointsCount);
         sb.append("\n");
         sb.append("\n");
 
-        sb.append("Date: ");
+        sb.append("Дата: ");
         sb.append("\n");
 
         Date duration = new Date(pollutionInfo.time);
 
         float hours = TimeUnit.MILLISECONDS.toHours(duration.getTime());
         if(0 < hours){
-            sb.append("hours = ");
+            sb.append("Часы = ");
             sb.append(hours);
             sb.append("\n");
 
@@ -474,7 +478,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
         if(0 < minutes){
             int formatMinutes = (int)(minutes % 60);
 
-            sb.append("minutes = ");
+            sb.append("Минуты = ");
             sb.append(formatMinutes);
             sb.append("\n");
 
@@ -489,7 +493,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
         if(0 < seconds){
             int formatSeconds = (int)(seconds % 60);
 
-            sb.append("seconds = ");
+            sb.append("Секунды = ");
             sb.append(formatSeconds);
             sb.append("\n");
 
@@ -498,16 +502,13 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
             durationString = durationString + "0";
         }
 
-        sb.append("Your pollution = ");
+        sb.append("Ваше загрязнение = ");
         sb.append(String.format("%.1f",pollutionInfo.pollution));
 
         String eventParameters = String.format("{\"value\":\"%.1f\", \"duration\":\"%s\"}", pollutionInfo.pollution, durationString);
         YandexMetrica.reportEvent("Pollution Info", eventParameters);
 
         mLocationUpdatesResultView.setText(sb.toString());
-
-        //removeLocationUpdates(view);
-        //updateButtonsState(false);
 
         clearLocations();
     }
